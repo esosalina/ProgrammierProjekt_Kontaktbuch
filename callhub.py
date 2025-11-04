@@ -94,7 +94,7 @@ def _log_call(entry: str) -> None:
 # --------------------------------------------------------------
 # MAIN PROGRAM LOOP
 # --------------------------------------------------------------
-def main() -> None:
+def main_call() -> None:
     """
     Main program loop:
     keeps showing the menu until the user chooses to exit.
@@ -119,5 +119,5 @@ def main() -> None:
 # ENTRY POINT
 # --------------------------------------------------------------
 if __name__ == "__main__":
-    main()
+    main_call()
 
