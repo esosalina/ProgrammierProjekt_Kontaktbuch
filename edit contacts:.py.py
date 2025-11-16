@@ -34,14 +34,14 @@ def edit_contact(contacts):
     elif choice == "3":  # Falls Nutzer Telefonnummer ändern will
         new_tel = input("Neue Telefonnummer: ").strip()  # Neue Telefonnummer abfragen
         if not new_tel.isdigit():  # Prüfen ob Nummer nur Zahlen enthält
-            print("❌ Telefonnummer muss nur Zahlen enthalten!")  # Fehlermeldung ausgeben
+            print("Telefonnummer muss nur Zahlen enthalten!")  # Fehlermeldung ausgeben
             return  # Abbrechen, weil Telefonnummer ungültig
         found["telefon"] = new_tel  # Neue Telefonnummer speichern
 
     elif choice == "4":  # Falls Nutzer E-Mail ändern will
         new_email = input("Neue E-Mail: ").strip()  # Neue E-Mail abfragen
         if "@" not in new_email or "." not in new_email:  # Überprüfen, ob Format einer E-Mail entspricht
-            print("❌ Ungültige E-Mail-Adresse!")  # Fehlermeldung
+            print("Ungültige E-Mail-Adresse!")  # Fehlermeldung
             return  # Abbrechen, weil E-Mail ungültig
         found["email"] = new_email  # Neue E-Mail speichern
 
