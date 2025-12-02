@@ -65,11 +65,11 @@ def delete_contact():
     try:
         with open(CONTACT_FILE, "r", encoding="utf-8") as f:
             lines = f.readlines()
-    except FileNotFoundError as e:
-        print("Kontaktdatei nicht gefunden.", e)
-    
+    except FileNotFoundError:
+        print("Kontaktdatei nicht gefunden.")
+        return
     if not lines: 
-        print("Kontaktdatei nicht vorhanden", e)
+        print("Kontaktdatei nicht vorhanden")
         return
     
     contacts = []
@@ -111,14 +111,14 @@ def delete_contact():
         return
 # Überarbeitete Kontakte zurück in die Datei schreiben
 
-with open(CONTACT_FILE, "w", encoding="utf-8") as f:
-    for c in contacts:
-        f.write(f"{c['id']}\n")
-        f.write(f"{c['vorname']}\n")
-        f.write(f"{c['name']}\n")
-        f.write(f"{c['telefon']}\n")
-        
-print("Datei wird aktualisiert.")
+    with open(CONTACT_FILE, "w", encoding="utf-8") as f:
+        for c in contacts:
+            f.write(f"{c['id']}\n")
+            f.write(f"{c['vorname']}\n")
+            f.write(f"{c['name']}\n")
+            f.write(f"{c['telefon']}\n")
+            
+    print("Datei wird aktualisiert.")
 
 
 # --------------------------------------------------------------

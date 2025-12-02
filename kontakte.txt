@@ -1,5 +1,26 @@
-28
+2801
 Anna
-Müller
+Schmidtke
 079 12 345 67 89
-Anna.müller@muster.ch
+Anna.Schmidtke@muster.ch
+2802
+Yannick
+Blümchen
+078 12 345 67 89
+YannickB@muster.ch
+2803
+Dominik
+Sonne
+/usr/local/bin/python3 "/Users/naomiuwensuyi/Documents/Uni/UNI 25:26/GRUNDLAGEN PROGRAMMIEREN/Coding/ProgrammierProjekt_Kontaktbuch/main.py"
+/usr/local/bin/python3 "/Users/naomiuwensuyi/Documents/Uni/UNI 25:26/GRUNDLAGEN PROGRAMMIEREN/Coding/ProgrammierProjekt_Kontaktbuch/main.py"
+/usr/local/bin/python3 "/Users/naomiuwensuyi/Documents/Uni/UNI 25:26/GRUNDLAGEN PROGRAMMIEREN/Coding/ProgrammierProjekt_Kontaktbuch/main.py"
+2803
+Dominik
+Sponser
+076 12 345 67 89
+DominikSponser@muster.ch
+2804
+Philine
+Sonne
+078 12 345 67 89
+SonnePhiline@muster.ch
