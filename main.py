@@ -34,16 +34,91 @@ def main_interface() -> str:
 # --------------------------------------------------------------
 
 def create_contact():
-    return print("Funktion noch nicht Programmiert!")
+    try:
+        # Eingaben des Benutzers
+        contact_id = input("Kontakt-ID: ").strip()
+        vorname = input("Vorname: ").strip()
+        nachname = input("Nachname: ").strip()
+        telefonnummer = input("Telefonnummer: ").strip()
+        email = input("E-Mail: ").strip()
 
+        # Öffnet die Datei im Anhängemodus (fügt neuen Kontakt hinzu)
+        with open("kontakte.txt", "a", encoding="utf-8") as file:
+            file.write(contact_id + "\n")
+            file.write(vorname + "\n")
+            file.write(nachname + "\n")
+            file.write(telefonnummer + "\n")
+            file.write(email + "\n")
 
+        print(f"\n Kontakt '{vorname} {nachname}' wurde erfolgreich hinzugefügt.")
+
+    except Exception as e:
+        print(" Fehler beim Hinzufügen des Kontakts:", e)
 
 # --------------------------------------------------------------
 # Delete contact FUNCTION
 # --------------------------------------------------------------
 
-def delete_contacts():
-    return print("Funktion noch nicht Programmiert!")
+def delete_contact():
+    print("\n--- Kontakt löschen ---")  # Überschrift ausgeben
+    search = input("ID, Telefonnummer oder E-Mail eingeben: ").strip()  # Nutzer gibt Suchbegriff ein, um passenden Kontakt zu finden
+    try:
+        with open(CONTACT_FILE, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+    except FileNotFoundError as e:
+        print("Kontaktdatei nicht gefunden.", e)
+    
+    if not lines: 
+        print("Kontaktdatei nicht vorhanden", e)
+        return
+    
+    contacts = []
+
+    for i in range(0, len(lines), 4):  # Durch alle Kontakte iterieren
+        try: 
+            cid = lines[i].strip()
+            vorname = lines[i+1].strip()
+            name = lines [i+2].strip()
+            telefon = lines [i+3].strip()
+        except:
+            continue # skips damaged entries
+        contact = {
+
+            "id": cid,
+            "vorname": vorname,
+            "name": name,
+            "telefon": telefon,
+            "email": ""
+        }
+        contacts.append(contact)
+    
+    for c in contacts:
+        if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüfen, ob Eingabe zu diesem Kontakt passt
+            print(f"\Gefundener Kontakt:")  # Kontakt anzeigen
+            print(f"{c['id']} – {c['name']} {c['vorname']} – {c['telefon']} – {c['email']}")  # Details ausgeben
+
+            confirm = input("Wirklich löschen? (ja/nein): ").lower()  # Nutzer muss Löschung bestätigen
+
+            if confirm == "ja":  # Wenn Nutzer „ja“ eingibt
+                contacts.remove(c)  # Kontakt aus Liste löschen
+                print("Kontakt wurde gelöscht.")  # Bestätigung ausgeben
+            else:
+                print("Löschen abgebrochen.")  # Meldung wenn nicht gelöscht wird
+            break
+    else:
+
+        print("Kontakt nicht gefunden.") # Meldung, falls kein Kontakt zur Eingabe passt
+        return
+# Überarbeitete Kontakte zurück in die Datei schreiben
+
+with open(CONTACT_FILE, "w", encoding="utf-8") as f:
+    for c in contacts:
+        f.write(f"{c['id']}\n")
+        f.write(f"{c['vorname']}\n")
+        f.write(f"{c['name']}\n")
+        f.write(f"{c['telefon']}\n")
+        
+print("Datei wird aktualisiert.")
 
 
 # --------------------------------------------------------------
@@ -52,18 +127,6 @@ def delete_contacts():
 
 def edit_contacts():
     return print("Funktion noch nicht Programmiert!")
-
-
-# --------------------------------------------------------------
-# Search contact FUNCTION
-# --------------------------------------------------------------
-
-def search_contacts():
-    return print("Funktion noch nicht Programmiert!")
-
-
-
-
 # --------------------------------------------------------------
 # Calls FUNCTION
 # --------------------------------------------------------------
@@ -189,7 +252,7 @@ def main() -> None:
         if choice == "1":
             create_contact()
         elif choice == "2":
-            delete_contacts()
+            delete_contact()
         elif choice == "3":
             edit_contacts()
         elif choice == "4":
