@@ -8,6 +8,7 @@ from datetime import datetime
 CONTACT_FILE = "kontakte.txt"  # file to store contacts
 CALLS_FILE = "calls.txt"  # file to store call logs
 PHONE_REGEX = r"0041 \d{2} \d{2} \d{2}"  # Swiss phone format (0041 00 00 00)
+CONTACT_SEPERATOR = "=======" #trennt die Kontakte von einander in kontakte.txt (übersichtlicher)
 
 
 # --------------------------------------------------------------
@@ -43,12 +44,13 @@ def create_contact():
         email = input("E-Mail: ").strip()
 
         # Öffnet die Datei im Anhängemodus (fügt neuen Kontakt hinzu)
-        with open("kontakte.txt", "a", encoding="utf-8") as file:
-            file.write(contact_id + "\n")
-            file.write(vorname + "\n")
-            file.write(nachname + "\n")
-            file.write(telefonnummer + "\n")
-            file.write(email + "\n")
+        with open("kontakte.txt", "a", encoding="utf-8") as datei:
+            datei.write(contact_id + "\n")
+            datei.write(vorname + "\n")
+            datei.write(nachname + "\n")
+            datei.write(telefonnummer + "\n")
+            datei.write(email + "\n")
+            datei.write(CONTACT_SEPERATOR + "\n")
 
         print(f"\n Kontakt '{vorname} {nachname}' wurde erfolgreich hinzugefügt.")
 
@@ -73,29 +75,36 @@ def delete_contact():
         return
     
     contacts = []
+    buffer = []
 
-    for i in range(0, len(lines), 4):  # Durch alle Kontakte iterieren
-        try: 
-            cid = lines[i].strip()
-            vorname = lines[i+1].strip()
-            name = lines [i+2].strip()
-            telefon = lines [i+3].strip()
-        except:
-            continue # skips damaged entries
+    with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
+        for line in datei:
+            line = line.strip()
+            if not line:
+                continue
+            if line == CONTACT_SEPERATOR:
+                buffer = []
+                continue
+
+        buffer.append(line)
+
+        if len(buffer) == 5:
+            cid, vorname, nachname, telefon, email = buffer
         contact = {
 
             "id": cid,
             "vorname": vorname,
-            "name": name,
+            "name": nachname,
             "telefon": telefon,
             "email": ""
         }
         contacts.append(contact)
+        buffer = []
     
     for c in contacts:
         if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüfen, ob Eingabe zu diesem Kontakt passt
             print(f"\Gefundener Kontakt:")  # Kontakt anzeigen
-            print(f"{c['id']} – {c['name']} {c['vorname']} – {c['telefon']} – {c['email']}")  # Details ausgeben
+            print(f"{c['id']} – {c['vorname']} {c['nachname']} – {c['telefon']} – {c['email']}")  # Details ausgeben
 
             confirm = input("Wirklich löschen? (ja/nein): ").lower()  # Nutzer muss Löschung bestätigen
 
@@ -111,12 +120,12 @@ def delete_contact():
         return
 # Überarbeitete Kontakte zurück in die Datei schreiben
 
-    with open(CONTACT_FILE, "w", encoding="utf-8") as f:
+    with open(CONTACT_FILE, "w", encoding="utf-8") as datei:
         for c in contacts:
-            f.write(f"{c['id']}\n")
-            f.write(f"{c['vorname']}\n")
-            f.write(f"{c['name']}\n")
-            f.write(f"{c['telefon']}\n")
+            datei.write(f"{c['id']}\n")
+            datei.write(f"{c['vorname']}\n")
+            datei.write(f"{c['name']}\n")
+            datei.write(f"{c['telefon']}\n")
             
     print("Datei wird aktualisiert.")
 
@@ -130,8 +139,8 @@ def edit_contact():
 
     search = input("ID, Telefonnummer oder E-Mail eingeben: ").strip()  # Nutzer gibt Suchbegriff ein, um Kontakt zu finden
     try:
-        with open(CONTACT_FILE, "r", encoding="utf-8") as f:
-            lines = f.readlines()
+        with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
+            lines = datei.readlines()
     except FileNotFoundError:
         print("Kontaktdatei existiert nicht.")
         return
@@ -141,24 +150,41 @@ def edit_contact():
         return
     
     contacts = []
-    
-    for i in range(0, len(lines), 4):
-        try:
-            cid = lines[i].strip()
-            vorname = lines[i+1].strip()
-            name = lines [i+2].strip()
-            telefon = lines [i+3].strip()
-            email = lines [i+4].strip()
-        except:
+    buffer = []
+
+    for line in lines:
+        line = line.strip()
+        if not line:
             continue
+
+        if line == CONTACT_SEPERATOR:
+
+            if len(buffer) == 5:
+                cid, vorname, nachname, telefon, email = buffer
+                contact = {
+                    "id": cid,
+                    "vorname": vorname,
+                    "nachname": nachname,
+                    "telefon": telefon,
+                    "email": email
+            }
+            contacts.append(contact)
+            buffer = []
+            continue
+
+        buffer.append(line)
+    
+    if len(buffer) == 5:
+        cid, vorname, nachname, telefon, email = buffer
         contact = {
             "id": cid,
             "vorname": vorname,
-            "nachname": name,
+            "nachname": nachname,
             "telefon": telefon,
             "email": email
         }
         contacts.append(contact)
+
     found = None  # Variable für später gespeicherten gefundenen Kontakt
     for c in contacts:  # Schleife geht durch alle Kontakte
         if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüft, ob Eingabe zu einem Kontakt passt
@@ -169,7 +195,7 @@ def edit_contact():
         print("Kontakt wurde nicht gefunden.")  # Fehlermeldung anzeigen
         return  # Funktion verlassen
 
-    print(f"\Gefundener Kontakt:")  # Kontaktübersicht anzeigen
+    print(f"Gefundener Kontakt:")  # Kontaktübersicht anzeigen
     print(f"{found['id']} – {found['vorname']} {found['nachname']} – {found['telefon']} – {found['email']}")  # Kontaktinformationen ausgeben
 
     print("\Was möchten Sie ändern?")  # Bearbeitungsmenü anzeigen
@@ -209,12 +235,15 @@ def edit_contact():
         return
     print(" Kontakt wurde aktualisiert!")  # Erfolgsmeldung nach Bearbeitung
 
-    with open(CONTACT_FILE, "w", encoding="utf-8") as f:
+    #schreibt die Datei zurück in kontakte.txt
+    with open(CONTACT_FILE, "w", encoding="utf-8") as datei:
         for c in contacts:
-            f.write(f"{c['id']}\n")
-            f.write(f"{c['vorname']}\n")
-            f.write(f"{c['nachname']}\n")
-            f.write(f"{c['telefon']}\n")
+            datei.write(f"{c['id']}\n")
+            datei.write(f"{c['vorname']}\n")
+            datei.write(f"{c['nachname']}\n")
+            datei.write(f"{c['telefon']}\n")
+            datei.write(f"{c['email']}\n")
+            datei.write(CONTACT_SEPERATOR + "\n")
     
     print("Datei wird akualisiert.")
         
