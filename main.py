@@ -65,11 +65,12 @@ def delete_contact():
     print("\n--- Kontakt löschen ---")  # Überschrift ausgeben
     search = input("ID, Telefonnummer oder E-Mail eingeben: ").strip()  # Nutzer gibt Suchbegriff ein, um passenden Kontakt zu finden
     try:
-        with open(CONTACT_FILE, "r", encoding="utf-8") as f:
-            lines = f.readlines()
+        with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
+            lines = datei.readlines()
     except FileNotFoundError:
         print("Kontaktdatei nicht gefunden.")
         return
+    
     if not lines: 
         print("Kontaktdatei nicht vorhanden")
         return
@@ -77,46 +78,73 @@ def delete_contact():
     contacts = []
     buffer = []
 
-    with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
-        for line in datei:
-            line = line.strip()
-            if not line:
-                continue
-            if line == CONTACT_SEPERATOR:
-                buffer = []
+    for line in lines:
+        line = line.strip()
+        if not line:
                 continue
 
+        if line == CONTACT_SEPERATOR:
+    
+            if len(buffer) == 5:
+                cid, vorname, nachname, telefon, email = buffer
+                contact = {
+                    "id": cid,
+                    "vorname": vorname,
+                    "name": nachname,
+                    "telefon": telefon,
+                    "email": ""
+                }
+                contacts.append(contact)
+            buffer = []
+            continue
+        
         buffer.append(line)
 
         if len(buffer) == 5:
             cid, vorname, nachname, telefon, email = buffer
+            contact = {
+                    "id": cid,
+                    "vorname": vorname,
+                    "name": nachname,
+                    "telefon": telefon,
+                    "email": email
+            }
+            contacts.append(contact)
+        buffer = []
+        continue
+        
+    if len(buffer) == 5:
+        cid, vorname, nachname, telefon, email = buffer
         contact = {
-
             "id": cid,
             "vorname": vorname,
             "name": nachname,
             "telefon": telefon,
-            "email": ""
+            "email": email
         }
         contacts.append(contact)
-        buffer = []
-    
+
+    found = None
     for c in contacts:
         if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüfen, ob Eingabe zu diesem Kontakt passt
-            print(f"\Gefundener Kontakt:")  # Kontakt anzeigen
-            print(f"{c['id']} – {c['vorname']} {c['nachname']} – {c['telefon']} – {c['email']}")  # Details ausgeben
-
-            confirm = input("Wirklich löschen? (ja/nein): ").lower()  # Nutzer muss Löschung bestätigen
-
-            if confirm == "ja":  # Wenn Nutzer „ja“ eingibt
-                contacts.remove(c)  # Kontakt aus Liste löschen
-                print("Kontakt wurde gelöscht.")  # Bestätigung ausgeben
-            else:
-                print("Löschen abgebrochen.")  # Meldung wenn nicht gelöscht wird
+            found = c
             break
-    else:
+        if not found:
+            print("Kontakt nicht gefunden.")
+            return
+        
+        print(f"\Gefundener Kontakt:")  # Kontakt anzeigen
+        print(f"{c['id']} – {c['vorname']} {c['nachname']} – {c['telefon']} – {c['email']}")  # Details ausgeben
 
-        print("Kontakt nicht gefunden.") # Meldung, falls kein Kontakt zur Eingabe passt
+        confirm = input("Wirklich löschen? (ja/nein): ").lower()  # Nutzer muss Löschung bestätigen
+
+        if confirm == "ja":  # Wenn Nutzer „ja“ eingibt
+            print("Löschen abgebrochen.")  # Meldung wenn nicht gelöscht wird
+            return
+        
+        #Kontakt löschen
+        contacts.remove(found)
+        print("Kontakt wurde gelöscht.") # Meldung, falls kein Kontakt zur Eingabe passt
         return
 # Überarbeitete Kontakte zurück in die Datei schreiben
 
@@ -126,6 +154,7 @@ def delete_contact():
             datei.write(f"{c['vorname']}\n")
             datei.write(f"{c['name']}\n")
             datei.write(f"{c['telefon']}\n")
+            datei.write(CONTACT_SEPERATOR + "\n")
             
     print("Datei wird aktualisiert.")
 
