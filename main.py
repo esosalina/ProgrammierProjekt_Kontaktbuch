@@ -148,14 +148,15 @@ def edit_contact():
             vorname = lines[i+1].strip()
             name = lines [i+2].strip()
             telefon = lines [i+3].strip()
+            email = lines [i+4].strip()
         except:
             continue
         contact = {
-             "id": cid,
+            "id": cid,
             "vorname": vorname,
-            "name": name,
+            "nachname": name,
             "telefon": telefon,
-            "email": ""
+            "email": email
         }
         contacts.append(contact)
     found = None  # Variable für später gespeicherten gefundenen Kontakt
@@ -169,22 +170,22 @@ def edit_contact():
         return  # Funktion verlassen
 
     print(f"\Gefundener Kontakt:")  # Kontaktübersicht anzeigen
-    print(f"{found['id']} – {found['name']} {found['vorname']} – {found['telefon']} – {found['email']}")  # Kontaktinformationen ausgeben
+    print(f"{found['id']} – {found['vorname']} {found['nachname']} – {found['telefon']} – {found['email']}")  # Kontaktinformationen ausgeben
 
     print("\Was möchten Sie ändern?")  # Bearbeitungsmenü anzeigen
-    print("1 - Name")
-    print("2 - Vorname")
+    print("1 - Vorname")
+    print("2 - Nachname")
     print("3 - Telefonnummer")
     print("4 - E-Mail")
     print("5 - Abbrechen")
 
     choice = input("Auswahl: ")  # Nutzer wählt, welches Feld er bearbeiten will
 
-    if choice == "1":  # Falls Nutzer Name ändern möchte
-        found["name"] = input("Neuer Name: ").strip()  # Neuer Name wird gespeichert
+    if choice == "1":  # Falls Nutzer Vorname ändern möchte
+        found["vorname"] = input("Neuer Vorname: ").strip()  # Neuer Name wird gespeichert
 
-    elif choice == "2":  # Falls Nutzer Vorname ändern möchte
-        found["vorname"] = input("Neuer Vorname: ").strip()  # Neuer Vorname wird gespeichert
+    elif choice == "2":  # Falls Nutzer Nachname ändern möchte
+        found["nachname"] = input("Neuer Nachname: ").strip()  # Neuer Vorname wird gespeichert
 
     elif choice == "3":  # Falls Nutzer Telefonnummer ändern will
         new_tel = input("Neue Telefonnummer: ").strip()  # Neue Telefonnummer abfragen
@@ -212,7 +213,7 @@ def edit_contact():
         for c in contacts:
             f.write(f"{c['id']}\n")
             f.write(f"{c['vorname']}\n")
-            f.write(f"{c['name']}\n")
+            f.write(f"{c['nachname']}\n")
             f.write(f"{c['telefon']}\n")
     
     print("Datei wird akualisiert.")
