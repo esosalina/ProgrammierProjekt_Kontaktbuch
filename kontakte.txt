@@ -1,0 +1,24 @@
+2801
+Patrick
+Grossmann
+078 12 345 67 89
+p.stern@muster.ch
+=======
+2803
+Benjamin
+Blümchen
+079 12 345 67 89
+-
+=======
+2804
+Sarah
+Lobster
+078 12 345 67 89
+lobstersarah@muster.ch
+=======
+2805
+Patrick
+Sand
+078 12 345 67 89
+sandmann79@muster.ch
+=======

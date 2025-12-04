@@ -48,51 +48,85 @@ def main_interface() -> str:
     print("(6) Exit contact book")
     return input("Enter a number between 1 - 6: ").strip()
 
+# --------------------------------------------------------------
+# Unique Contact-ID FUNCTION
+# --------------------------------------------------------------
+def unique_id(contact_id: str) -> bool:
+    """
+    Tests, if the new Contact ID already exists in CONTACT_FILE
+    """
+    try: 
+        with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
+            while True:
+                cid = datei.readline()
+                if not cid: 
+                    break
+                cid = cid.strip()
+                firstname = datei.readline().strip()
+                lastname = datei.readline().strip()
+                phonenumber = datei.readline().strip()
+                email= datei.readline().strip()
+                sep = datei.readline()
 
+                if cid == contact_id:
+                    return True
+    except FileNotFoundError:
+        return False
 
+    return False
 # --------------------------------------------------------------
 # Create contact FUNCTION
 # --------------------------------------------------------------
-
 def create_contact():
     try:
+        #Unique ID abfragen
+        while True:
+            contact_id = input("Contact-ID: ").strip()
+            if not contact_id:
+                print("Contact-ID cannot be empty.")
+                continue
+
+            if unique_id(contact_id):
+                print("This Contact_ID already exists. Please choose another ID.")
+            else: 
+                break
         # Eingaben des Benutzers
         contact_id = input("Kontakt-ID: ").strip()
-        vorname = input("Vorname: ").strip()
-        nachname = input("Nachname: ").strip()
-        telefonnummer = input_phone()
-        email = input_email_letters_only()
+        firstname = input("Vorname: ").strip()
+        lastname = input("Nachname: ").strip()
+        phonenumber = input("Telefonnummer: ").strip()
+        email = input("E-Mail: ").strip()
 
         # Öffnet die Datei im Anhängemodus (fügt neuen Kontakt hinzu)
-        with open("kontakte.txt", "a", encoding="utf-8") as datei:
+        with open(CONTACT_FILE, "a", encoding="utf-8") as datei:
             datei.write(contact_id + "\n")
-            datei.write(vorname + "\n")
-            datei.write(nachname + "\n")
-            datei.write(telefonnummer + "\n")
+            datei.write(firstname + "\n")
+            datei.write(lastname + "\n")
+            datei.write(phonenumber + "\n")
             datei.write(email + "\n")
             datei.write(CONTACT_SEPERATOR + "\n")
 
-        print(f"\n Kontakt '{vorname} {nachname}' wurde erfolgreich hinzugefügt.")
+        print(f"\n Contact '{firstname} {lastname}' was added successfully.")
 
     except Exception as e:
-        print(" Fehler beim Hinzufügen des Kontakts:", e)
+        print(" Error while adding contact. Please try again:", e)
 
 # --------------------------------------------------------------
 # Delete contact FUNCTION
 # --------------------------------------------------------------
 
 def delete_contact():
-    print("\n--- Kontakt löschen ---")  # Überschrift ausgeben
-    search = input("ID, Telefonnummer oder E-Mail eingeben: ").strip()  # Nutzer gibt Suchbegriff ein, um passenden Kontakt zu finden
+    print("\n--- Delete Contact ---")  # Überschrift ausgeben
+    search = input("Enter ID, Phonenumber or E-Mail: ").strip()  # Nutzer gibt Suchbegriff ein, um passenden Kontakt zu finden
     try:
         with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
             lines = datei.readlines()
     except FileNotFoundError:
-        print("Kontaktdatei nicht gefunden.")
+        print("Data was not found.")
         return
     
     if not lines: 
-        print("Kontaktdatei nicht vorhanden")
+        print("Data does not exist.")
         return
     
     contacts = []
@@ -105,12 +139,12 @@ def delete_contact():
 
         if line == CONTACT_SEPERATOR:
             if len(buffer) == 5:
-                cid, vorname, nachname, telefon, email = buffer
+                cid, firstname, lastname, phonenumber, email = buffer
                 contact = {
                     "id": cid,
-                    "vorname": vorname,
-                    "nachname": nachname,
-                    "telefon": telefon,
+                    "firstname": firstname,
+                    "lastname": lastname,
+                    "phonenumber": phonenumber,
                     "email": email
                 }
                 contacts.append(contact)
@@ -121,50 +155,50 @@ def delete_contact():
 
 #letzter Kontakt ohne ==== wird eingelesen
     if len(buffer) == 5:
-        cid, vorname, nachname, telefon, email = buffer
+        cid, firstname, lastname, phonenumber, email = buffer
         contact = {
             "id": cid,
-            "vorname": vorname,
-            "nachname": nachname,
-            "telefon": telefon,
+            "firstname": firstname,
+            "lastname": lastname,
+            "phonenumber": phonenumber,
             "email": email
         }
         contacts.append(contact)
 
     found = None
     for c in contacts:
-        if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüfen, ob Eingabe zu diesem Kontakt passt
+        if c["id"] == search or c["phonenumber"] == search or c["email"] == search:  # Prüfen, ob Eingabe zu diesem Kontakt passt
             found = c
             break
 
     if not found:
-        print("Kontakt nicht gefunden.")
+        print("Contact was not found.")
         return
         
-    print(f"Gefundener Kontakt:")  # Kontakt anzeigen
-    print(f"{found['id']} – {found['vorname']} {found['nachname']} – {found['telefon']} – {found['email']}")  # Details ausgeben
+    print(f"Found Contact:")  # Kontakt anzeigen
+    print(f"{found['id']} – {found['firstname']} {found['lastname']} – {found['phonenumber']} – {found['email']}")  # Details ausgeben
 
-    confirm = input("Wirklich löschen? (ja/nein): ").strip().lower()  # Nutzer muss Löschung bestätigen
+    confirm = input("Do you really want to delete this contact (yes/no): ").strip().lower()  # Nutzer muss Löschung bestätigen
 
-    if confirm != "ja":  # Wenn Nutzer „ja“ eingibt
-        print("Löschen abgebrochen.")  # Meldung wenn nicht gelöscht wird
+    if confirm != "yes":  # Wenn Nutzer „ja“ eingibt
+        print("Process Canclled.")  # Meldung wenn nicht gelöscht wird
         return
         
         #Kontakt löschen
     contacts.remove(found)
-    print("Kontakt wurde gelöscht.") # Meldung, falls kein Kontakt zur Eingabe passt
-# Überarbeitete Kontakte zurück in die Datei schreiben
+    print("Contact has been deleted.") # Meldung, falls kein Kontakt zur Eingabe passt
 
+# Überarbeitete Kontakte zurück in die Datei schreiben
     with open(CONTACT_FILE, "w", encoding="utf-8") as datei:
         for c in contacts:
             datei.write(f"{c['id']}\n")
-            datei.write(f"{c['vorname']}\n")
-            datei.write(f"{c['nachname']}\n")
-            datei.write(f"{c['telefon']}\n")
+            datei.write(f"{c['firstname']}\n")
+            datei.write(f"{c['lastname']}\n")
+            datei.write(f"{c['phonenumber']}\n")
             datei.write(f"{c['email']}\n")
             datei.write(CONTACT_SEPERATOR + "\n")
             
-    print("Datei wird aktualisiert.")
+    print("Data is being updated.")
 
 
 # --------------------------------------------------------------
@@ -172,18 +206,18 @@ def delete_contact():
 # --------------------------------------------------------------
 
 def edit_contact():  
-    print("\n--- Kontakt bearbeiten ---")  # Überschrift ausgeben
+    print("\n--- Edit Contact ---")  # Überschrift ausgeben
 
-    search = input("ID, Telefonnummer oder E-Mail eingeben: ").strip()  # Nutzer gibt Suchbegriff ein, um Kontakt zu finden
+    search = input("Enter ID, Phonenumber or E-Mail: ").strip()  # Nutzer gibt Suchbegriff ein, um Kontakt zu finden
     try:
         with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
             lines = datei.readlines()
     except FileNotFoundError:
-        print("Kontaktdatei existiert nicht.")
+        print("Data does not exist.")
         return
     
     if not lines:
-        print("Keine Kontakte vorhanden.")
+        print("No Contacts found.")
         return
     
     contacts = []
@@ -197,12 +231,12 @@ def edit_contact():
         if line == CONTACT_SEPERATOR:
 
             if len(buffer) == 5:
-                cid, vorname, nachname, telefon, email = buffer
+                cid, firstname, lastname, phonenumber, email = buffer
                 contact = {
                     "id": cid,
-                    "vorname": vorname,
-                    "nachname": nachname,
-                    "telefon": telefon,
+                    "firstname": firstname,
+                    "lastname": lastname,
+                    "phonenumber": phonenumber,
                     "email": email
             }
             contacts.append(contact)
@@ -212,71 +246,77 @@ def edit_contact():
         buffer.append(line)
     
     if len(buffer) == 5:
-        cid, vorname, nachname, telefon, email = buffer
+        cid, firstname, lastname, phonenumber, email = buffer
         contact = {
             "id": cid,
-            "vorname": vorname,
-            "nachname": nachname,
-            "telefon": telefon,
+            "firstname": firstname,
+            "lastname": lastname,
+            "phonenumber": phonenumber,
             "email": email
         }
         contacts.append(contact)
 
     found = None  # Variable für später gespeicherten gefundenen Kontakt
     for c in contacts:  # Schleife geht durch alle Kontakte
-        if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüft, ob Eingabe zu einem Kontakt passt
+        if c["id"] == search or c["phonenumber"] == search or c["email"] == search:  # Prüft, ob Eingabe zu einem Kontakt passt
             found = c  # Kontakt in Variable speichern
             break  # Schleife abbrechen, weil Kontakt gefunden wurde
 
     if not found:  # Wenn kein Kontakt gefunden wurde
-        print("Kontakt wurde nicht gefunden.")  # Fehlermeldung anzeigen
+        print("Contact was not found.")  # Fehlermeldung anzeigen
         return  # Funktion verlassen
 
-    print(f"Gefundener Kontakt:")  # Kontaktübersicht anzeigen
-    print(f"{found['id']} – {found['vorname']} {found['nachname']} – {found['telefon']} – {found['email']}")  # Kontaktinformationen ausgeben
+    print(f"Contact found: ")  # Kontaktübersicht anzeigen
+    print(f"{found['id']} – {found['firstname']} {found['lastname']} – {found['phonenumber']} – {found['email']}")  # Kontaktinformationen ausgeben
 
-    print("\Was möchten Sie ändern?")  # Bearbeitungsmenü anzeigen
-    print("1 - Vorname")
-    print("2 - Nachname")
-    print("3 - Telefonnummer")
+    print("What do you want to change?")  # Bearbeitungsmenü anzeigen
+    print("1 - Firstname")
+    print("2 - Lastname")
+    print("3 - Phonenumber")
     print("4 - E-Mail")
-    print("5 - Abbrechen")
+    print("5 - Cancel")
 
-    choice = input("Auswahl: ")  # Nutzer wählt, welches Feld er bearbeiten will
+    choice = input("Option: ")  # Nutzer wählt, welches Feld er bearbeiten will
 
     if choice == "1":  # Falls Nutzer Vorname ändern möchte
-        found["vorname"] = input("Neuer Vorname: ").strip()  # Neuer Name wird gespeichert
+        found["firstname"] = input("New Firstname: ").strip()  # Neuer Name wird gespeichert
 
     elif choice == "2":  # Falls Nutzer Nachname ändern möchte
-        found["nachname"] = input("Neuer Nachname: ").strip()  # Neuer Vorname wird gespeichert
+        found["lastname"] = input("New Lastname: ").strip()  # Neuer Vorname wird gespeichert
 
     elif choice == "3":  # Falls Nutzer Telefonnummer ändern will
-        found["telefon"] = input_phone("Neue Telefonnummer: ")
-
+        new_tel = input("Neue Telefonnummer: ").strip()  # Neue Telefonnummer abfragen
+        if not new_tel.isdigit():  # Prüfen ob Nummer nur Zahlen enthält
+            print("Telefonnummer muss nur Zahlen enthalten!")  # Fehlermeldung ausgeben
+            return  # Abbrechen, weil Telefonnummer ungültig
+        found["telefon"] = new_tel  # Neue Telefonnummer speichern
 
     elif choice == "4":  # Falls Nutzer E-Mail ändern will
-        found["email"] = input_email_letters_only("Neue E-Mail: ")
-
+        new_email = input("Neue E-Mail: ").strip()  # Neue E-Mail abfragen
+        if "@" not in new_email or "." not in new_email:  # Überprüfen, ob Format einer E-Mail entspricht
+            print("Ungültige E-Mail-Adresse!")  # Fehlermeldung
+            return  # Abbrechen, weil E-Mail ungültig
+        found["email"] = new_email  # Neue E-Mail speichern
 
     elif choice == "5":  # Falls Nutzer abbrechen möchte
-        print("Änderung abgebrochen.")  # Meldung ausgeben
+        print("Changes Cancelled.")  # Meldung ausgeben
         return  # Funktion verlassen
     else: 
-        print("Ungültige Auswahl.")
+        print("Invalid Option.")
         return
-    print(" Kontakt wurde aktualisiert!")  # Erfolgsmeldung nach Bearbeitung
+    print(" Contact was updated!")  # Erfolgsmeldung nach Bearbeitung
 
     #schreibt die Datei zurück in kontakte.txt
     with open(CONTACT_FILE, "w", encoding="utf-8") as datei:
         for c in contacts:
             datei.write(f"{c['id']}\n")
-            datei.write(f"{c['vorname']}\n")
-            datei.write(f"{c['nachname']}\n")
-            datei.write(f"{c['telefon']}\n")
+            datei.write(f"{c['firstname']}\n")
+            datei.write(f"{c['lastname']}\n")
+            datei.write(f"{c['phonenumber']}\n")
             datei.write(f"{c['email']}\n")
             datei.write(CONTACT_SEPERATOR + "\n")
     
-    print("Datei wird akualisiert.")
+    print("Date is being updated.")
         
             
 
@@ -322,19 +362,60 @@ def outgoing_call() -> None:
 # CONTACT SEARCH FUNCTION
 # --------------------------------------------------------------
 def search_contacts() -> None:
+    """ 
+    Lets the user search by name or user ID
     """
-    Lets the user search by name or user ID.
-    This is currently a demo placeholder (no real contact DB).
-    """
-    query = input("Search (Enter Name or UserID): ").strip()
-    
-    if not query:
-        print("Empty search. Try again.")
-        return
-    
-    print(f"Searching for '{query}' ... (demo)")
-    _log_call(f"SEARCH '{query}'")  # Log that a search was performed
+    try:
+        search = input('\nSearch Contact (Enter name or ID): ').lower().strip()
 
+        with open (CONTACT_FILE,'r', encoding="utf-8") as datei:
+            found = False 
+
+            while True:
+                
+                contact_id  = datei.readline()
+                if not contact_id:
+                    break
+                
+                contact_id = contact_id.strip()
+                firstname = datei.readline().strip()
+                lastname = datei.readline().strip()
+                phonenumber = datei.readline().strip()
+                email = datei.readline().strip()
+
+                sep = datei.readline()
+
+#wird nur ausgeführt wenn wir einen Kontakt gefunden haben
+                if(
+                    search in contact_id.lower() or
+                    search in firstname.lower() or 
+                    search in lastname.lower() or 
+                    search in phonenumber or 
+                    search in email.lower()
+                ):
+
+                    if not found:
+                        found = True
+                        print('\n=== SEARCH RESULTS  ===')
+                        found = True
+                       
+                    print(f"\nID: {contact_id}")
+                    print(f"Firstname: {firstname}")
+                    print(f"Lastname: {lastname}")
+                    print(f"Phonenumber: {phonenumber}")
+                    print(f"Email: {email}")
+
+            if not found:
+                print("No contact found.")
+        
+    except FileNotFoundError as e:
+        print("File not found.")
+
+# def contact_filter():
+    
+#     with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
+#         contacts = datei.readlines()
+#         return contacts
 
 # --------------------------------------------------------------
 # LAST CALLS FUNCTION
