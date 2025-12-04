@@ -84,41 +84,28 @@ def delete_contact():
                 continue
 
         if line == CONTACT_SEPERATOR:
-    
             if len(buffer) == 5:
                 cid, vorname, nachname, telefon, email = buffer
                 contact = {
                     "id": cid,
                     "vorname": vorname,
-                    "name": nachname,
+                    "nachname": nachname,
                     "telefon": telefon,
-                    "email": ""
+                    "email": email
                 }
                 contacts.append(contact)
             buffer = []
             continue
-        
+
         buffer.append(line)
 
-        if len(buffer) == 5:
-            cid, vorname, nachname, telefon, email = buffer
-            contact = {
-                    "id": cid,
-                    "vorname": vorname,
-                    "name": nachname,
-                    "telefon": telefon,
-                    "email": email
-            }
-            contacts.append(contact)
-        buffer = []
-        continue
-        
+#letzter Kontakt ohne ==== wird eingelesen
     if len(buffer) == 5:
         cid, vorname, nachname, telefon, email = buffer
         contact = {
             "id": cid,
             "vorname": vorname,
-            "name": nachname,
+            "nachname": nachname,
             "telefon": telefon,
             "email": email
         }
@@ -129,31 +116,32 @@ def delete_contact():
         if c["id"] == search or c["telefon"] == search or c["email"] == search:  # Prüfen, ob Eingabe zu diesem Kontakt passt
             found = c
             break
-        if not found:
-            print("Kontakt nicht gefunden.")
-            return
+
+    if not found:
+        print("Kontakt nicht gefunden.")
+        return
         
-        print(f"\Gefundener Kontakt:")  # Kontakt anzeigen
-        print(f"{c['id']} – {c['vorname']} {c['nachname']} – {c['telefon']} – {c['email']}")  # Details ausgeben
+    print(f"Gefundener Kontakt:")  # Kontakt anzeigen
+    print(f"{found['id']} – {found['vorname']} {found['nachname']} – {found['telefon']} – {found['email']}")  # Details ausgeben
 
-        confirm = input("Wirklich löschen? (ja/nein): ").lower()  # Nutzer muss Löschung bestätigen
+    confirm = input("Wirklich löschen? (ja/nein): ").strip().lower()  # Nutzer muss Löschung bestätigen
 
-        if confirm == "ja":  # Wenn Nutzer „ja“ eingibt
-            print("Löschen abgebrochen.")  # Meldung wenn nicht gelöscht wird
-            return
+    if confirm != "ja":  # Wenn Nutzer „ja“ eingibt
+        print("Löschen abgebrochen.")  # Meldung wenn nicht gelöscht wird
+        return
         
         #Kontakt löschen
-        contacts.remove(found)
-        print("Kontakt wurde gelöscht.") # Meldung, falls kein Kontakt zur Eingabe passt
-        return
+    contacts.remove(found)
+    print("Kontakt wurde gelöscht.") # Meldung, falls kein Kontakt zur Eingabe passt
 # Überarbeitete Kontakte zurück in die Datei schreiben
 
     with open(CONTACT_FILE, "w", encoding="utf-8") as datei:
         for c in contacts:
             datei.write(f"{c['id']}\n")
             datei.write(f"{c['vorname']}\n")
-            datei.write(f"{c['name']}\n")
+            datei.write(f"{c['nachname']}\n")
             datei.write(f"{c['telefon']}\n")
+            datei.write(f"{c['email']}\n")
             datei.write(CONTACT_SEPERATOR + "\n")
             
     print("Datei wird aktualisiert.")
