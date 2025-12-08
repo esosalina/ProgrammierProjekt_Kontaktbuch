@@ -59,8 +59,3 @@ Exception-Handling: try-except für Eingabevalidierung und Dateioperationen
 String-Operationen: Formatierung, E-Mail- und Telefonnummer-Validierung 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
-
-1 Einleitung/Projektbeschrieb
-2 Wichtigste Funktionen
-
-Readme: Die Dokumentation behandelt relevante Themen (z. B. Beschreibung der Hauptfunktionen, Projektstruktur, Anleitungen usw.). (Aus dem Bewertungssraster)
