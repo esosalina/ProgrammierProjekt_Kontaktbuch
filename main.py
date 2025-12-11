@@ -11,6 +11,23 @@ PHONE_REGEX = r"0041 \d{2} \d{2} \d{2}"  # Swiss phone format (0041 00 00 00)
 CONTACT_SEPERATOR = "=======" #trennt die Kontakte von einander in kontakte.txt (übersichtlicher)
 
 
+ # --------------------------------------------------------------
+ # LOCAL HELPER FUNCTIONS (INPUT VALIDATION)
+ # --------------------------------------------------------------
+
+    def input_phone(prompt="Telefonnummer (nur Zahlen): "):
+        while True:
+            number = input(prompt).strip()
+            if number.isdigit():
+                return number
+            print(" Error: phone number must contain digits only.")
+
+    def input_email(prompt="E-Mail (letters, @ and . only): "):
+        while True:
+            email = input(prompt).strip()
+            if all(c.isalpha() or c in "@." for c in email):
+                return email
+            print(" Error: email must contain letters, @ and . only.")
 # --------------------------------------------------------------
 # MENU / INTERFACE FUNCTION
 # --------------------------------------------------------------
@@ -40,8 +57,8 @@ def create_contact():
         contact_id = input("Kontakt-ID: ").strip()
         vorname = input("Vorname: ").strip()
         nachname = input("Nachname: ").strip()
-        telefonnummer = input("Telefonnummer: ").strip()
-        email = input("E-Mail: ").strip()
+        telefonnummer = input_phone()
+        email = input_email_letters_only()
 
         # Öffnet die Datei im Anhängemodus (fügt neuen Kontakt hinzu)
         with open("kontakte.txt", "a", encoding="utf-8") as datei:
@@ -231,18 +248,12 @@ def edit_contact():
         found["nachname"] = input("Neuer Nachname: ").strip()  # Neuer Vorname wird gespeichert
 
     elif choice == "3":  # Falls Nutzer Telefonnummer ändern will
-        new_tel = input("Neue Telefonnummer: ").strip()  # Neue Telefonnummer abfragen
-        if not new_tel.isdigit():  # Prüfen ob Nummer nur Zahlen enthält
-            print("Telefonnummer muss nur Zahlen enthalten!")  # Fehlermeldung ausgeben
-            return  # Abbrechen, weil Telefonnummer ungültig
-        found["telefon"] = new_tel  # Neue Telefonnummer speichern
+        found["telefon"] = input_phone("Neue Telefonnummer: ")
+
 
     elif choice == "4":  # Falls Nutzer E-Mail ändern will
-        new_email = input("Neue E-Mail: ").strip()  # Neue E-Mail abfragen
-        if "@" not in new_email or "." not in new_email:  # Überprüfen, ob Format einer E-Mail entspricht
-            print("Ungültige E-Mail-Adresse!")  # Fehlermeldung
-            return  # Abbrechen, weil E-Mail ungültig
-        found["email"] = new_email  # Neue E-Mail speichern
+        found["email"] = input_email_letters_only("Neue E-Mail: ")
+
 
     elif choice == "5":  # Falls Nutzer abbrechen möchte
         print("Änderung abgebrochen.")  # Meldung ausgeben
