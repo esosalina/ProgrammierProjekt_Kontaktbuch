@@ -11,23 +11,26 @@ PHONE_REGEX = r"0041 \d{2} \d{2} \d{2}"  # Swiss phone format (0041 00 00 00)
 CONTACT_SEPERATOR = "=======" #trennt die Kontakte von einander in kontakte.txt (übersichtlicher)
 
 
- # --------------------------------------------------------------
- # LOCAL HELPER FUNCTIONS (INPUT VALIDATION)
- # --------------------------------------------------------------
+# --------------------------------------------------------------
+# HELPER FUNCTIONS (INPUT VALIDATION)
+# --------------------------------------------------------------
 
-    def input_phone(prompt="Telefonnummer (nur Zahlen): "):
-        while True:
-            number = input(prompt).strip()
-            if number.isdigit():
-                return number
-            print(" Error: phone number must contain digits only.")
+def input_phone(prompt="Telefonnummer (nur Zahlen): "):
+   
+    while True:
+        number = input(prompt).strip()  # Leerzeichen entfernen
+        if number.isdigit():            # Prüfen ob nur Zahlen
+            return number               # Gültige Eingabe zurückgeben
+        print("Fehler: Telefonnummer darf nur Zahlen enthalten.")
 
-    def input_email(prompt="E-Mail (letters, @ and . only): "):
-        while True:
-            email = input(prompt).strip()
-            if all(c.isalpha() or c in "@." for c in email):
-                return email
-            print(" Error: email must contain letters, @ and . only.")
+def input_email_letters_only(prompt="E-Mail (nur Buchstaben, @ und .): "):
+    
+    while True:
+        email = input(prompt).strip()  # Leerzeichen entfernen
+        if all(c.isalpha() or c in "@." for c in email):  # Prüfen jedes Zeichen
+            return email               # Gültige Eingabe zurückgeben
+        print(" Fehler: E-Mail darf nur Buchstaben, @ und . enthalten.")
+
 # --------------------------------------------------------------
 # MENU / INTERFACE FUNCTION
 # --------------------------------------------------------------
