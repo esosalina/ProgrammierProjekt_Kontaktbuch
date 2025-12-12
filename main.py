@@ -366,13 +366,18 @@ def search_contacts() -> None:
     Lets the user search by name or user ID
     """
     try:
-        search = input('\nSearch Contact (Enter name or ID): ').lower().strip()
+        search = input('\nSearch Contact (Enter name or ID): ').strip()
+        if not search:
+            print("Please enter a letter to search.")
+            return
+        search_prefix = search.upper()
+
+        results = [] #sammelt die Treffer
+        
 
         with open (CONTACT_FILE,'r', encoding="utf-8") as datei:
-            found = False 
 
             while True:
-                
                 contact_id  = datei.readline()
                 if not contact_id:
                     break
@@ -382,40 +387,30 @@ def search_contacts() -> None:
                 lastname = datei.readline().strip()
                 phonenumber = datei.readline().strip()
                 email = datei.readline().strip()
-
                 sep = datei.readline()
 
 #wird nur ausgeführt wenn wir einen Kontakt gefunden haben
-                if(
-                    search in contact_id.lower() or
-                    search in firstname.lower() or 
-                    search in lastname.lower() or 
-                    search in phonenumber or 
-                    search in email.lower()
-                ):
+                if firstname.upper().startswith(search_prefix):
+                    #Kontakt wird als Tupel gespeichert
+                    results.append((contact_id, firstname, lastname, phonenumber, email))
 
-                    if not found:
-                        found = True
-                        print('\n=== SEARCH RESULTS  ===')
-                        found = True
-                       
-                    print(f"\nID: {contact_id}")
-                    print(f"Firstname: {firstname}")
-                    print(f"Lastname: {lastname}")
-                    print(f"Phonenumber: {phonenumber}")
-                    print(f"Email: {email}")
+        results.sort(key=lambda contact: contact[1].upper())
+        if results:
+            print('\n=== SEARCH RESULTS  ===')
+            for contact in results:
+                cid, firstname, lastname, phonenumber, email = contact
+                print(f"\nID: {cid}")
+                print(f"Firstname: {firstname}")
+                print(f"Lastname: {lastname}")
+                print(f"Phonenumber: {phonenumber}")
+                print(f"Email: {email}")
 
-            if not found:
+        else: 
                 print("No contact found.")
         
     except FileNotFoundError as e:
         print("File not found.")
 
-# def contact_filter():
-    
-#     with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
-#         contacts = datei.readlines()
-#         return contacts
 
 # --------------------------------------------------------------
 # LAST CALLS FUNCTION
