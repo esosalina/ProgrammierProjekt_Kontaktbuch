@@ -119,6 +119,10 @@ def add_contact():
     except Exception as e:
         print("Fehler beim Hinzufügen des Kontakts:", e)
 
+def create_contact():
+    """Backward-compatible wrapper for add_contact."""
+    add_contact()
+
 # --------------------------------------------------------------
 # Delete contact FUNCTION
 # --------------------------------------------------------------
