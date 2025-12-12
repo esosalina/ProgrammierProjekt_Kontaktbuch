@@ -1,6 +1,6 @@
 # Kontaktbuch-Manager
 
-Willkommen zu unserem Programierprojekt
+Willkommen zu unserem Programmierprojekt
 
 Diese Anwendung dient als einfaches Verwaltungstool für Kontakte und ermöglicht es Nutzern, ihre persönlichen sowie geschäftlichen Kontaktinformationen zentral zu organisieren. Nutzer können neue Kontakte mit Angaben wie Name, Telefonnummer und E-Mail-Adresse hinzufügen, bestehende Einträge bearbeiten oder löschen und ihre gespeicherten Daten gezielt durchsuchen. Alle Kontaktinformationen werden dauerhaft lokal in Dateien gespeichert, sodass sie jederzeit zuverlässig verfügbar sind. 
 

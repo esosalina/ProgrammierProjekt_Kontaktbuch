@@ -18,4 +18,4 @@ def add_contact():
         print(f"\n Kontakt '{vorname} {nachname}' wurde erfolgreich hinzugefügt.")
 
     except Exception as e:
-        print(" Fehler beim Hinzufügen des Kontakts:", e)
+        print(" Fehler beim Hinzufügen des Kontakt:", e)
