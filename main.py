@@ -12,7 +12,7 @@ CONTACT_SEPERATOR = "=======" #trennt die Kontakte von einander in kontakte.txt 
 
 
 # --------------------------------------------------------------
-# HELPER FUNCTIONS (INPUT VALIDATION)
+# HELPER FUNCTIONS 
 # --------------------------------------------------------------
 
 def input_phone(prompt="Telefonnummer (nur Zahlen): "):
