@@ -12,18 +12,18 @@ CONTACT_SEPERATOR = "=======" #trennt die Kontakte von einander in kontakte.txt 
 
 
 # --------------------------------------------------------------
-# HELPER FUNCTIONS 
+# HELPER FUNCTIONS (INPUT VALIDATION)
 # --------------------------------------------------------------
 
-def input_phone(prompt="Telefonnummer (nur Zahlen): "):
+def input_phone(prompt="Phonenumber (numbers only): "):
    
     while True:
         number = input(prompt).strip()  # Leerzeichen entfernen
         if number.isdigit():            # Prüfen ob nur Zahlen
             return number               # Gültige Eingabe zurückgeben
-        print("Fehler: Telefonnummer darf nur Zahlen enthalten.")
+        print("Error: Phonenumber must be numbers only.")
 
-def input_email_letters_only(prompt="E-Mail (nur Buchstaben, @ und .): "):
+def input_email_letters_only(prompt="E-Mail (letter only, @ and .): "):
     
     while True:
         email = input(prompt).strip()  # Leerzeichen entfernen
@@ -77,51 +77,48 @@ def unique_id(contact_id: str) -> bool:
 # --------------------------------------------------------------
 # Create contact FUNCTION
 # --------------------------------------------------------------
-import re
-
-# Schweizer Telefonnummern-Regex: 0041 00 00 00
-PHONE_REGEX = r"^0041 ?\d{2} ?\d{2} ?\d{2} ?\d{2}$"
-
-def add_contact():
+def create_contact():
     try:
-        contact_id = input("Kontakt-ID: ").strip()
-        vorname = input("Vorname: ").strip()
-        nachname = input("Nachname: ").strip()
-        
-        """
-        Asks user for a phone number, validates format,
-        and adds the number if the format is correct.
-        """
-        number = input("Enter phonenumber (0041 00 00 00): ").strip()
+        while True:
+            contact_id = input("Contact-ID: ").strip()
+            if not contact_id:
+                print("Contact-ID cannot be empty.")
+                continue
 
-        # Validate the number format using regex
-        if number and not re.fullmatch(PHONE_REGEX, number):
+            if unique_id(contact_id):
+                print("This Contact-ID already exists. Please choose another ID.")
+            else:
+                break
+
+        firstname = input("Firstname: ").strip()
+        lastname = input("Lastname: ").strip()
+
+        phonenumber = input("Phonenumber (0041 00 00 00): ").strip()
+        if phonenumber and not re.fullmatch(PHONE_REGEX, phonenumber):
             print("Invalid format. Use: 0041 00 00 00")
             return
-        
-        email = input("E-Mail: ").strip()
 
-        # Prüfung: Mindestens Telefonnummer ODER E-Mail muss ausgefüllt sein
-        if not number and not email:
-            print("\nFehler: Bitte mindestens Telefonnummer ODER E-Mail angeben.")
+        email = input("E-Mail: ").strip()
+        if email and ("@" not in email or "." not in email):
+            print("Invalid E-Mail address.")
             return
 
-        # Kontakt speichern
-        with open("kontakte.txt", "a", encoding="utf-8") as file:
-            file.write(contact_id + "\n")
-            file.write(vorname + "\n")
-            file.write(nachname + "\n")
-            file.write(number + "\n")
-            file.write(email + "\n")
+        if not phonenumber and not email:
+            print("Please provide at least a phonenumber or an email.")
+            return
 
-        print(f"\nKontakt '{vorname} {nachname}' wurde erfolgreich hinzugefügt.")
+        with open(CONTACT_FILE, "a", encoding="utf-8") as datei:
+            datei.write(contact_id + "\n")
+            datei.write(firstname + "\n")
+            datei.write(lastname + "\n")
+            datei.write(phonenumber + "\n")
+            datei.write(email + "\n")
+            datei.write(CONTACT_SEPERATOR + "\n")
+
+        print(f"\nContact '{firstname} {lastname}' was added successfully.")
 
     except Exception as e:
-        print("Fehler beim Hinzufügen des Kontakts:", e)
-
-def create_contact():
-    """Backward-compatible wrapper for add_contact."""
-    add_contact()
+        print("Error while adding contact. Please try again:", e)
 
 # --------------------------------------------------------------
 # Delete contact FUNCTION
@@ -405,7 +402,8 @@ def search_contacts() -> None:
                 if firstname.upper().startswith(search_prefix):
                     #Kontakt wird als Tupel gespeichert
                     results.append((contact_id, firstname, lastname, phonenumber, email))
-
+        
+        # results.sort() sortiert die Liste "results" direkt und verändert sie
         results.sort(key=lambda contact: contact[1].upper())
         if results:
             print('\n=== SEARCH RESULTS  ===')
