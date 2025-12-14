@@ -9,6 +9,8 @@ CONTACT_FILE = "kontakte.txt"  # file to store contacts
 CALLS_FILE = "calls.txt"  # file to store call logs
 PHONE_REGEX = r"0041 \d{2} \d{2} \d{2}"  # Swiss phone format (0041 00 00 00)
 CONTACT_SEPERATOR = "=======" #trennt die Kontakte von einander in kontakte.txt (übersichtlicher)
+CONTACT_ID_MIN = 2800
+CONTACT_ID_MAX = 3200
 
 
 # --------------------------------------------------------------
@@ -74,15 +76,75 @@ def unique_id(contact_id: str) -> bool:
         return False
 
     return False
+
+
+def load_contacts() -> list:
+    """
+    Reads all contacts from CONTACT_FILE and returns them as dicts.
+    """
+    contacts = []
+    try:
+        with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
+            while True:
+                cid = datei.readline()
+                if not cid:
+                    break
+                cid = cid.strip()
+                firstname = datei.readline().strip()
+                lastname = datei.readline().strip()
+                phonenumber = datei.readline().strip()
+                email = datei.readline().strip()
+                sep = datei.readline()
+                if cid:
+                    contacts.append({
+                        "id": cid,
+                        "firstname": firstname,
+                        "lastname": lastname,
+                        "phonenumber": phonenumber,
+                        "email": email,
+                    })
+    except FileNotFoundError:
+        pass
+    return contacts
+
+
+def save_contacts(contacts: list) -> None:
+    """
+    Persists the given contact list sorted by numeric Contact-ID.
+    """
+    def sort_key(contact: dict):
+        try:
+            return int(contact["id"])
+        except ValueError:
+            return contact["id"]
+
+    contacts_sorted = sorted(contacts, key=sort_key)
+    with open(CONTACT_FILE, "w", encoding="utf-8") as datei:
+        for contact in contacts_sorted:
+            datei.write(f"{contact['id']}\n")
+            datei.write(f"{contact['firstname']}\n")
+            datei.write(f"{contact['lastname']}\n")
+            datei.write(f"{contact['phonenumber']}\n")
+            datei.write(f"{contact['email']}\n")
+            datei.write(CONTACT_SEPERATOR + "\n")
 # --------------------------------------------------------------
 # Create contact FUNCTION
 # --------------------------------------------------------------
 def create_contact():
     try:
         while True:
-            contact_id = input("Contact-ID: ").strip()
+            contact_id = input("Contact-ID (2800 - 3200): ").strip()
             if not contact_id:
                 print("Contact-ID cannot be empty.")
+                continue
+
+            if not contact_id.isdigit() or len(contact_id) != 4:
+                print("Contact-ID must consist of exactly four digits.")
+                continue
+
+            contact_id_value = int(contact_id)
+            if not CONTACT_ID_MIN <= contact_id_value <= CONTACT_ID_MAX:
+                print(f"Contact-ID must be between {CONTACT_ID_MIN} and {CONTACT_ID_MAX}.")
                 continue
 
             if unique_id(contact_id):
@@ -107,13 +169,15 @@ def create_contact():
             print("Please provide at least a phonenumber or an email.")
             return
 
-        with open(CONTACT_FILE, "a", encoding="utf-8") as datei:
-            datei.write(contact_id + "\n")
-            datei.write(firstname + "\n")
-            datei.write(lastname + "\n")
-            datei.write(phonenumber + "\n")
-            datei.write(email + "\n")
-            datei.write(CONTACT_SEPERATOR + "\n")
+        contacts = load_contacts()
+        contacts.append({
+            "id": contact_id,
+            "firstname": firstname,
+            "lastname": lastname,
+            "phonenumber": phonenumber,
+            "email": email,
+        })
+        save_contacts(contacts)
 
         print(f"\nContact '{firstname} {lastname}' was added successfully.")
 
@@ -294,11 +358,11 @@ def edit_contact():
         found["lastname"] = input("New Lastname: ").strip()  # Neuer Vorname wird gespeichert
 
     elif choice == "3":  # Falls Nutzer Telefonnummer ändern will
-        new_tel = input("Neue Telefonnummer: ").strip()  # Neue Telefonnummer abfragen
-        if not new_tel.isdigit():  # Prüfen ob Nummer nur Zahlen enthält
-            print("Telefonnummer muss nur Zahlen enthalten!")  # Fehlermeldung ausgeben
-            return  # Abbrechen, weil Telefonnummer ungültig
-        found["telefon"] = new_tel  # Neue Telefonnummer speichern
+        new_tel = input("New Phonenumber (0041 00 00 00): ").strip()
+        if not re.fullmatch(PHONE_REGEX, new_tel):
+            print("Invalid format. Use: 0041 00 00 00")
+            return
+        found["phonenumber"] = new_tel
 
     elif choice == "4":  # Falls Nutzer E-Mail ändern will
         new_email = input("Neue E-Mail: ").strip()  # Neue E-Mail abfragen
@@ -377,10 +441,8 @@ def search_contacts() -> None:
     try:
         search = input('\nSearch Contact (Enter name or ID): ').strip()
         if not search:
-            print("Please enter a letter to search.")
+            print("Please enter a value to search.")
             return
-        search_prefix = search.upper()
-
         results = [] #sammelt die Treffer
         
 
@@ -398,12 +460,20 @@ def search_contacts() -> None:
                 email = datei.readline().strip()
                 sep = datei.readline()
 
-#wird nur ausgeführt wenn wir einen Kontakt gefunden haben
-                if firstname.upper().startswith(search_prefix):
-                    #Kontakt wird als Tupel gespeichert
-                    results.append((contact_id, firstname, lastname, phonenumber, email))
+                if len(search) == 1 and search.isalpha():
+                    if firstname.upper().startswith(search.upper()):
+                        results.append((contact_id, firstname, lastname, phonenumber, email))
+                else:
+                    term = search.lower()
+                    if (
+                        term in contact_id.lower() or
+                        term in firstname.lower() or 
+                        term in lastname.lower() or 
+                        term in phonenumber.lower() or 
+                        term in email.lower()
+                    ):
+                        results.append((contact_id, firstname, lastname, phonenumber, email))
         
-        # results.sort() sortiert die Liste "results" direkt und verändert sie
         results.sort(key=lambda contact: contact[1].upper())
         if results:
             print('\n=== SEARCH RESULTS  ===')
