@@ -80,7 +80,7 @@ def unique_id(contact_id: str) -> bool:
 
 def load_contacts() -> list:
     """
-    Reads all contacts from kontakte.txt and returns them as dicts.
+    Reads all contacts from CONTACT_FILE and returns them as dicts.
     """
     contacts = []
     try:
@@ -132,11 +132,11 @@ def save_contacts(contacts: list) -> None:
 # --------------------------------------------------------------
 def create_contact():
     """
-    The User is able to create new contacts with this function. 
+    Creates a new contact ensuring ID is unique and within the allowed range.
     """
     try:
         while True:
-            contact_id = input("Contact-ID (2800 - 3200): ").strip()
+            contact_id = input(f"Contact-ID ({CONTACT_ID_MIN} - {CONTACT_ID_MAX}): ").strip()
             if not contact_id:
                 print("Contact-ID cannot be empty.")
                 continue
@@ -145,8 +145,8 @@ def create_contact():
                 print("Contact-ID must consist of exactly four digits.")
                 continue
 
-            contact_id_value = int(contact_id)
-            if not CONTACT_ID_MIN <= contact_id_value <= CONTACT_ID_MAX:
+            cid_value = int(contact_id)
+            if not CONTACT_ID_MIN <= cid_value <= CONTACT_ID_MAX:
                 print(f"Contact-ID must be between {CONTACT_ID_MIN} and {CONTACT_ID_MAX}.")
                 continue
 
