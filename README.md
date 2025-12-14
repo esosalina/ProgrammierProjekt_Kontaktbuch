@@ -6,7 +6,7 @@ Dozierede: Härer Felix, Grieder Hermann
 
 Willkommen zu unserem Programmierprojekt
 
-Diese Anwendung dient als einfaches Verwaltungstool für Kontakte und ermöglicht es Nutzern, ihre persönlichen sowie geschäftlichen Kontaktinformationen zentral zu organisieren. Nutzer können neue Kontakte erstelle mit Angaben wie Name, Telefonnummer und E-Mail-Adresse, bestehende Einträge bearbeiten oder löschen und ihre gespeicherten Daten gezielt durchsuchen. Alle Kontaktinformationen werden dauerhaft lokal in Dateien gespeichert, sodass sie jederzeit zuverlässig verfügbar sind. 
+Diese Anwendung dient als einfaches Verwaltungstool für Kontakte und ermöglicht es den Nutzern, ihre persönlichen sowie geschäftlichen Kontaktinformationen zentral zu organisieren. Nutzer können neue Kontakte mit Angaben wie Vorname und Nachname, Telefonnummer und E-Mail-Adresse erstellen, bestehende Einträge bearbeiten oder löschen und ihre gespeicherten Daten gezielt durchsuchen. Alle Kontaktinformationen werden dauerhaft lokal in Dateien gespeichert und sind dadurch jederzeit zuverlässig verfügbar. 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -14,43 +14,44 @@ Diese Anwendung dient als einfaches Verwaltungstool für Kontakte und ermöglich
 
 # Funktionsübersicht
 
-- Create_contact: Hier werden neue Kontakte mit Vorname, Nachname, Telefonummer und E-mail adresse erfasst. 
+- Create_contact: Neue Kontakte mit Vorname, Nachname, Telefonummer und E-mail Adresse erfasst. 
 
-- Delete_Contact: Kontakte könne über eine eindeutige ID, Telefonnummer oder E-Mail-Adresse gelöscht werden. 
+- Delete_Contact: Kontakte können über eine eindeutige ID, Telefonnummer oder E-Mail-Adresse gelöscht werden. 
 
 - Edit_Contact: Bestehende Kontakte können geändert werden, ohne sie neu anlegen zu müssen. 
 
-- Search_Contact: Kontakte können nach Vornamen, Telefonnummer oder E-Mail-Adresse gefunden werden. Auch Teiltreffer sind möglich, z.b man gibt nur den Buchstaben "A" ein und es werden alle Vornamen aufgelistet die mit dem Buchstaben "A" beginnen. 
+- Search_Contact: Kontakte können nach Vorname, Telefonnummer oder E-Mail-Adresse gesucht werden. Auch Teiltreffer sind möglich, z.b bei der Eingabe des Buchstabens "A" werden alle Vornamen angezeigt, die mit "A" beginnen. 
 
-- Results.sort(): Mit dieser Funktion sind die Teiltreffer möglich und werden Alphabetisch nach dem Vornamen sortiert. 
+- Results.sort(): Diese Funktion ermöglicht die alphabetische Sortierung der Suchergebnisse nach Vornamen. 
 
-- Calls: Es können Anrufe über Eingabe von Kontakt oder Telefonnummer. Vergangene Anrufe werden abgespeichert und können abgerufen werden. 
+- Calls: Anrufe können über Eingabe des Kontakts oder der Telefonnummer getätigt werden. Vergangene Anrufe werden gespeichert und können später eingesehen werden.  
 
-- Speicher und Beenden: Alle Kontaktdaten werden dauerhaft in der Datei "kontakte.txt" gespeichert, auch nach dem das Programm beendet wurde. 
+- Speicher und Beenden: Alle Kontaktdaten werden dauerhaft in der Datei "kontakte.txt" gespeichert, auch nach dem Beenden des Programms. 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 # Programmablauf
 
-Beim Programmstart erscheint ein menügesteuertes Hauptmenü mit mehreren Optionen von 1-6. Nach der Auswahl einer Option wird die gewünschte Funktion ausgeführt, das Ergebnis angezeigt und anschliessend zum Hauptmenü zurückgekehrt, bis der Benutzer das Programm beendet und alle Daten gespeichert werden.
+Beim Programmstart erscheint ein menügesteuertes Hauptmenü mit verschiedenen Optionen von 1-6. 
+Nach der Auswahl einer Option wird die gewünschte Funktion ausgeführt, das Ergebnis angezeigt und anschliessend zum Hauptmenü zurückgekehrt. Das Programm läuft, bis der Benutzer es beendet, wobei alle Daten gespeichert werden. 
 
-#Datenspeicherung
+# Datenspeicherung
 
-- kontakte.txt: Speichert alle Kontakte mit User-ID, Vorname, Nachname, Telefonnummer und E-mail Adresse. Die Datei wird beim Programmstart geladen. 
+- kontakte.txt: Speichert alle Kontakte mit Benutzer-ID, Vorname, Nachname, Telefonnummer und E-mail Adresse. Die Datei wird beim Programmstart automatisch geladen. 
 
-- calls.txt: Speichert alle vergangenen Anrufe mit Datum, Zeit,Telefonnummer und Voramen
+- calls.txt: Speichert alle vergangenen Anrufe mit Datum, Zeit, Telefonnummer und Vorname. 
 
-Die Anwendung verwendet dann ausschliesslich lokale Dateien, sodass die Kontaktinformationen unabhängig von externen Diensten dauerhaft verfügbar bleiben.
+Die Anwendung verwendet dann ausschliesslich lokale Dateien, sodass alle Kontaktinformationen unabhängig von externen Diensten dauerhaft verfügbar bleiben.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 # Installation und Start
 
-Voraussetzung für die Verwendung dieses Programms ist die Installation von Python 3.2 oder höher. 
-Die Projektdateien main.py, kontakte.txt und calls.txt in einem gemeinsamen Projektordner ablegen
+Voraussetzung für die Verwendung dieses Programms ist die Installation von Python 3.12 oder höher. 
+Die Projektdateien main.py, kontakte.txt und calls.txt müssen sich im selben Projektordner befinden. 
 
-Danach das Programm im Terminal starten mit python main.py oder den play Button in der main.py.
+Das Programm kann im Terminal mit "python main.py" oder über den Play Button in der main.py gestartet werden.
 
-Im Hauptmenü dann die gewünschte Funktion per Zahleneingabe auswählen und den Eingabeaufforderungen folgen.
+Im Hauptmenü wird anschliessend die gewünschte Funktion per Zahleneingabe ausgewählt, und der Nutzer folgt den Eingabeaufforderungen.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -58,20 +59,21 @@ Im Hauptmenü dann die gewünschte Funktion per Zahleneingabe auswählen und den
 
 Das Projekt verwendet folgende Python-Konzepte: 
 
-Datentypen: Strings, Floats, Integers, Listen, Dictionaries 
+- Datentypen: Strings, Floats, Integers, Listen, Dictionaries 
 
-Kontrollstrukturen: if/elif/else, while-Schleifen (Menü), for-Schleifen (Kontaktsuche) 
+- Kontrollstrukturen: if/elif/else, while-Schleifen (Menü), for-Schleifen (z.b für die Kontaktsuche) 
 
-Funktionen: Separate Funktionen für jede Hauptfunktion (create_contact, check_contact, show_contacts, etc.) 
+- Funktionen: Separate Funktionen für jede Hauptfunktion (create_contact, edit_contact, show_contacts, etc.) 
 
-Dateiverarbeitung: open(), read(), write() 
+- Dateiverarbeitung: open(), read(), write() 
 
-Exception-Handling: try-except für Eingabevalidierung und Dateioperationen 
+- Exception-Handling: try-except für Eingabevalidierung und Dateioperationen 
 
-String-Operationen: Formatierung, E-Mail- und Telefonnummer-Validierung 
+- String-Operationen: Formatierung, E-Mail- und Telefonnummer-Validierung 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 
 # Zielgruppe
 
-Die Anwendung richtet sich an Nutzer, die ihre persönlichen oder geschäfltichen Kontakte lokal und ohne komplexe Software speichern, verwalten und schnell wiederfinden möchte. Durch das einfache Konsolenmenü und die dauerhafte Datenspeicherung eigent sich das Programm besonders als Lernprojekt für den Einstieg in Python und praktische Datenverarbeitung.n 
+Die Anwendung richtet sich an Nutzer, die ihre persönlichen oder geschäfltichen Kontakte lokal und ohne komplexe Software speichern, verwalten und schnell wiederfinden möchten. 
+Durch das einfache Konsolenmenü und die dauerhafte Datenspeicherung eignet sich das Programm besonders gut als Lernprojekt für den Einstieg in Python und die praktische Arbeit mit Dateien und Datenstrukturen.
