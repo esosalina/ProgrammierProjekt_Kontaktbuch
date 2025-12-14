@@ -55,7 +55,7 @@ def main_interface() -> str:
 # --------------------------------------------------------------
 def unique_id(contact_id: str) -> bool:
     """
-    Tests, if the new Contact ID already exists in CONTACT_FILE
+    Tests, if the new Contact ID already exists in kontakte.txt
     """
     try: 
         with open(CONTACT_FILE, "r", encoding="utf-8") as datei:
@@ -80,7 +80,7 @@ def unique_id(contact_id: str) -> bool:
 
 def load_contacts() -> list:
     """
-    Reads all contacts from CONTACT_FILE and returns them as dicts.
+    Reads all contacts from kontakte.txt and returns them as dicts.
     """
     contacts = []
     try:
@@ -131,6 +131,9 @@ def save_contacts(contacts: list) -> None:
 # Create contact FUNCTION
 # --------------------------------------------------------------
 def create_contact():
+    """
+    The User is able to create new contacts with this function. 
+    """
     try:
         while True:
             contact_id = input("Contact-ID (2800 - 3200): ").strip()
@@ -189,6 +192,11 @@ def create_contact():
 # --------------------------------------------------------------
 
 def delete_contact():
+
+    """
+    The user is able to delete existing contacts from kontakte.txt
+    """
+    
     print("\n--- Delete Contact ---")  # Überschrift ausgeben
     search = input("Enter ID, Phonenumber or E-Mail: ").strip()  # Nutzer gibt Suchbegriff ein, um passenden Kontakt zu finden
     try:
@@ -226,7 +234,7 @@ def delete_contact():
 
         buffer.append(line)
 
-#letzter Kontakt ohne ==== wird eingelesen
+# letzter Kontakt ohne ==== wird eingelesen
     if len(buffer) == 5:
         cid, firstname, lastname, phonenumber, email = buffer
         contact = {
@@ -279,6 +287,9 @@ def delete_contact():
 # --------------------------------------------------------------
 
 def edit_contact():  
+    """
+    The user is able to edit single elements from kontakte.txt
+    """
     print("\n--- Edit Contact ---")  # Überschrift ausgeben
 
     search = input("Enter ID, Phonenumber or E-Mail: ").strip()  # Nutzer gibt Suchbegriff ein, um Kontakt zu finden
@@ -578,5 +589,8 @@ def main() -> None:
 # --------------------------------------------------------------
 # ENTRY POINT
 # --------------------------------------------------------------
+    """
+    This is the entry point of the program.
+    """
 if __name__ == "__main__":
     main()

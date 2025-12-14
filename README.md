@@ -2,6 +2,7 @@
 # Kontaktbuch-Manager
 
 Gruppenmitglieder: Arthur Saryan, David Kopp, Numana Sajid, Naomi Uwensuyi
+
 Dozierede: Härer Felix, Grieder Hermann
 
 Willkommen zu unserem Programmierprojekt
