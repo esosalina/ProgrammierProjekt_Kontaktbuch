@@ -13,18 +13,23 @@ CONTACT_ID_MIN = 2800
 CONTACT_ID_MAX = 3200
 
 
-# --------------------------------------------------------------
-# HELPER FUNCTIONS (INPUT VALIDATION)
-# --------------------------------------------------------------
+ # --------------------------------------------------------------
+ # LOCAL HELPER FUNCTIONS (INPUT VALIDATION)
+ # --------------------------------------------------------------
 
-def input_phone(prompt="Phonenumber (numbers only): "):
-   
-    while True:
-        number = input(prompt).strip()  # Leerzeichen entfernen
-        if number.isdigit():            # Prüfen ob nur Zahlen
-            return number               # Gültige Eingabe zurückgeben
-        print("Error: Phonenumber must be numbers only.")
+    def input_phone(prompt="Telefonnummer (nur Zahlen): "):
+        while True:
+            number = input(prompt).strip()
+            if number.isdigit():
+                return number
+            print(" Error: phone number must contain digits only.")
 
+    def input_email(prompt="E-Mail (letters, @ and . only): "):
+        while True:
+            email = input(prompt).strip()
+            if all(c.isalpha() or c in "@." for c in email):
+                return email
+            print(" Error: email must contain letters, @ and . only.")
 # --------------------------------------------------------------
 # MENU / INTERFACE FUNCTION
 # --------------------------------------------------------------
