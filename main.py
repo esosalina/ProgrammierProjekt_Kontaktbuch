@@ -25,14 +25,6 @@ def input_phone(prompt="Phonenumber (numbers only): "):
             return number               # Gültige Eingabe zurückgeben
         print("Error: Phonenumber must be numbers only.")
 
-def input_email_letters_only(prompt="E-Mail (letter only, @ and .): "):
-    
-    while True:
-        email = input(prompt).strip()  # Leerzeichen entfernen
-        if all(c.isalpha() or c in "@." for c in email):  # Prüfen jedes Zeichen
-            return email               # Gültige Eingabe zurückgeben
-        print(" Fehler: E-Mail darf nur Buchstaben, @ und . enthalten.")
-
 # --------------------------------------------------------------
 # MENU / INTERFACE FUNCTION
 # --------------------------------------------------------------
